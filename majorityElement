@@ -1,0 +1,64 @@
+Step 1: Starting with a Hashmap (Counting Frequencies)
+
+My initial approach was straightforward and intuitive. I used a hashmap (Python dictionary) to count the frequency of each element in the list. By iterating through the list once, I kept track of how many times each number appeared. As soon as any element's count exceeded half the length of the list (n // 2), I returned that element as the majority.
+
+This method was easy to implement and guaranteed correctness, but it required extra space proportional to the number of unique elements — which could be as large as the size of the list in the worst case.
+
+freq = {}
+for num in nums:
+    freq[num] = freq.get(num, 0) + 1
+    if freq[num] > len(nums) // 2:
+        return num
+
+Step 2: Trying to Solve Without Extra Space Using Two Pointers
+
+Wanting to improve the space efficiency, I tried to come up with a solution that used no extra space. At first, I thought maybe I could use two pointers to scan the array, comparing elements to identify the majority. The idea was to find pairs of matching elements or somehow count frequencies by moving pointers.
+
+However, this approach quickly became complicated and error-prone: 
+
+      During this solution I also thought of a possible solution if you sort the elements, as theres always a majority element and by sorting you can find matches adjacent to eachother, but i continued to explore if i could use two pointers
+
+
+    Two pointers didn’t naturally fit this problem because it’s not about pairs or subarrays, but about counting global frequency.
+
+    It led to nested loops and inefficient solutions, with tricky edge cases and resets.
+
+    Ultimately, it was hard to maintain correctness and efficiency without auxiliary storage.
+
+Step 3: Discovering the Boyer-Moore Voting Algorithm
+
+While researching or reviewing common algorithms for this problem, I found the Boyer-Moore Voting Algorithm — a clever method that elegantly solves the majority element problem in:
+
+    One pass through the list
+
+    Constant extra space (O(1))
+
+The key insight is to maintain a candidate element and a counter:
+
+    When the counter is zero, pick the current element as a new candidate.
+
+    If the current element matches the candidate, increment the counter.
+
+    Otherwise, decrement the counter.
+
+Because the majority element appears more than half the time, it will "outvote" all other elements, and the candidate at the end will be the majority element.
+
+count = 0
+candidate = None
+for num in nums:
+    if count == 0:
+        candidate = num
+    count += 1 if num == candidate else -1
+return candidate
+
+Reflection
+
+This journey was enlightening because:
+
+    The hashmap approach is simple and intuitive but uses extra space.
+
+    Trying two pointers was a natural instinct but didn’t suit the problem’s nature.
+
+    The Boyer-Moore algorithm elegantly bridges the gap by being both efficient and space-conscious.
+
+I now appreciate how sometimes problems require stepping back and finding the right abstraction or insight (like vote cancellation) rather than brute forcing with familiar tools.
