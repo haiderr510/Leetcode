@@ -1,0 +1,96 @@
+# 🚀 LeetCode — Longest Common Prefix (Python)
+
+## 📌 Problem
+Write a function to find the longest common **prefix** string amongst an array of strings.  
+If there is no common prefix, return an empty string `""`.
+
+**Example 1:**
+```python
+Input: ["flower","flow","flight"]
+Output: "fl"
+```
+
+**Example 2:**
+```python
+Input: ["dog","racecar","car"]
+Output: ""
+```
+
+---
+
+## 🧠 Thought Process
+Instead of trimming strings over and over with slicing, I solved this by scanning **character by character**:
+
+1. The prefix length can’t be longer than the **shortest string** in the list.
+2. For each character index `i`:
+   - Take the `i`-th character from the first string as a reference.
+   - Compare it against the same index in all other strings.
+3. If they all match → add it to the answer.  
+4. If there’s a mismatch → stop and return what we’ve built so far.
+
+This way, the solution is **efficient** and avoids unnecessary string slicing.
+
+---
+
+## 💻 Code
+```python
+from typing import List
+
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        if not strs:
+            return ""
+        
+        first = strs[0]
+        n = len(strs)
+        min_len = min(len(s) for s in strs)
+
+        ans_chars = []
+        for i in range(min_len):
+            c = first[i]
+            j = 1
+            while j < n and strs[j][i] == c:
+                j += 1
+            if j == n:
+                ans_chars.append(c)
+            else:
+                break
+
+        return "".join(ans_chars)
+```
+
+---
+
+## ⏱️ Complexity Analysis
+- **Time:** `O(N · M)`  
+  - N = number of strings  
+  - M = length of the shortest string  
+- **Space:** `O(1)` extra (just storing the prefix)
+
+---
+
+## 📝 Example Walkthrough
+Input:
+```python
+["flower","flow","flight"]
+```
+
+Steps:
+- i=0 → `'f'` matches → prefix = `"f"`  
+- i=1 → `'l'` matches → prefix = `"fl"`  
+- i=2 → mismatch (`'o'` vs `'i'`) → stop  
+
+✅ Output: `"fl"`
+
+---
+
+## 🔍 Reflections
+- My first attempt had indexing issues (`strs[i][i]` instead of `strs[0][i]`).
+- Fixed by always using the first string as the reference column.
+- Learned the importance of **separating string index vs. character index**.
+- Ran at **100% runtime on LeetCode** 🎉
+
+---
+
+## 🏷️ Tags
+`Array` · `String` · `Prefix` · `LeetCode 14`
